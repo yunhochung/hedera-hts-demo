@@ -21,6 +21,7 @@ const {
   TokenUnfreezeTransaction,
   TokenWipeTransaction,
   Hbar,
+  HbarUnit,
   Status
 } = require("@hashgraph/sdk");
 
@@ -59,7 +60,7 @@ export async function tokenCreate(token) {
     tx.setInitialSupply(token.initialSupply);
     tx.setTreasuryAccountId(token.treasury);
     tx.setAutoRenewAccountId(token.autoRenewAccount);
-    tx.setMaxTransactionFee(new Hbar(1));
+    tx.setMaxTransactionFee(new Hbar(100, HbarUnit.Hbar));
     tx.setAutoRenewPeriod(autoRenewPeriod);
 
     if (token.adminKey) {
@@ -170,7 +171,7 @@ async function tokenTransactionWithAmount(
       transaction.setAccountId(instruction.accountId);
     }
     transaction.setAmount(instruction.amount);
-    transaction.setMaxTransactionFee(new Hbar(1));
+    transaction.setMaxTransactionFee(new Hbar(100, HbarUnit.HBAR));
 
     await transaction.signWithOperator(client);
     await transaction.sign(key);
@@ -208,7 +209,7 @@ async function tokenTransactionWithIdAndAccount(
   try {
     transaction.setTokenId(instruction.tokenId);
     transaction.setAccountId(instruction.accountId);
-    transaction.setMaxTransactionFee(new Hbar(1));
+    transaction.setMaxTransactionFee(new Hbar(100, HbarUnit.HBAR));
 
     await transaction.signWithOperator(client);
     await transaction.sign(key);
@@ -443,7 +444,7 @@ async function tokenAssociationTransaction(
   try {
     transaction.setTokenIds([tokenId]);
     transaction.setAccountId(account.accountId);
-    transaction.setMaxTransactionFee(new Hbar(1));
+    transaction.setMaxTransactionFee(new Hbar(100, HbarUnit.HBAR));
 
     await transaction.signWithOperator(client);
     await transaction.sign(userKey);
@@ -542,7 +543,7 @@ export async function tokenSwap(
       tx.addHbarTransfer(to, new Hbar(-hBars));
     }
 
-    tx.setMaxTransactionFee(new Hbar(1));
+    tx.setMaxTransactionFee(new Hbar(100, HbarUnit.HBAR));
     tx.freezeWith(client);
 
     // signature only required if transferring from the 'to' address, but
@@ -588,7 +589,7 @@ export async function tokenTransfer(
     const tx = await new TransferTransaction();
     tx.addTokenTransfer(tokenId, account.accountId, -quantity);
     tx.addTokenTransfer(tokenId, destination, quantity);
-    tx.setMaxTransactionFee(new Hbar(1));
+    tx.setMaxTransactionFee(new Hbar(100, HbarUnit.HBAR));
     if (hbar !== 0) {
       // token recipient pays in hBar and signs transaction
       tx.addHbarTransfer(destination, new Hbar(-hbar));
@@ -637,7 +638,7 @@ export async function tokenDelete(token) {
   try {
     let tx = await new TokenDeleteTransaction();
     tx.setTokenId(token.tokenId);
-    tx.setMaxTransactionFee(new Hbar(1));
+    tx.setMaxTransactionFee(new Hbar(100, HbarUnit.HBAR));
 
     await tx.signWithOperator(client);
     if (typeof token.adminKey !== "undefined") {
